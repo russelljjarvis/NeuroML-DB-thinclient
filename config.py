@@ -20,13 +20,13 @@ class Config(object):
 
         self.debug_ip = '192.168.0.34'
         self.debug_port = 4200
-
+        '''
         self.webserver_name = 'dendrite.asu.edu'  # spike.asu.edu - testing server
         self.webserver_port = '5000'
         self.pwd = os.environ['NMLDBPWD']  # This needs to be set to the password
         self.webserver = self.webserver_name + ":" + self.webserver_port
         self.server_IP = socket.gethostbyname(self.webserver_name)
-
+        '''
         self.temp_models_folder = os.path.abspath('temp')
         self.server_model_path = '/var/www/NeuroMLmodels'
 

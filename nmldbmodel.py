@@ -28,14 +28,15 @@ class NMLDB_Model(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, model="", server=None, skip_model_record = False):
+        '''
         if server is None:
-            self.server = NMLDB()
-            self.server_passed_in = False
+            #self.server = NMLDB()
+            #self.server_passed_in = False
 
         else:
             self.server = server
             self.server_passed_in = True
-
+        '''
         self.config = Config()
 
         # If passing in a pre-retrieved Model DB record, re-use it
@@ -47,10 +48,10 @@ class NMLDB_Model(object):
         else:
             self.path = model
 
-            self.server.connect()
+            #self.server.connect()
 
-            if not skip_model_record:
-                self.model_record = Models.get(Models.Model_ID == self.get_model_nml_id())
+            #if not skip_model_record:
+            #    self.model_record = Models.get(Models.Model_ID == self.get_model_nml_id())
 
         sys.setrecursionlimit(100000)
 
@@ -64,8 +65,8 @@ class NMLDB_Model(object):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if not self.server_passed_in:
-            self.server.close()
+        #if not self.server_passed_in:
+         #   self.server.close()
 
         if self.config.cleanup_temp and hasattr(self, "temp_model_path"):
             print("Cleaning up temp files in: " + self.temp_model_path + " ...")
@@ -140,7 +141,7 @@ class NMLDB_Model(object):
         count = self.get_equation_count()
 
         if count is not None:
-            self.server.connect()
+            #self.server.connect()
             self.model_record.Equations = count
             self.model_record.save()
 
@@ -532,7 +533,7 @@ class NMLDB_Model(object):
         cvode_active = tvi_dict["cvode_active"]
         steps = tvi_dict["steps"]
 
-        self.server.connect()
+        #self.server.connect()
 
         with self.server.db.atomic() as transaction:
             self.create_or_update_waveform(protocol, label, meta_protocol, times, "Voltage", voltage, "mV", run_time, error, dt_or_atol, cvode_active, steps)
@@ -730,7 +731,7 @@ class NMLDB_Model(object):
     def update_model_status(self, status, property=None):
 
         print("Updating model status...")
-        self.server.connect()
+        #self.server.connect()
 
         # Don't change the status of NOSIM models
         if self.model_record.Status != "NOSIM":
@@ -899,7 +900,7 @@ class NMLDB_Model(object):
         pass
 
     def save_wave_stats(self):
-        self.server.connect()
+        #self.server.connect()
 
         waves = Model_Waveforms \
             .select(Model_Waveforms.Model, Model_Waveforms.ID, Model_Waveforms.Protocol) \

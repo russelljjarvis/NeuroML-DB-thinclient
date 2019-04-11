@@ -34,6 +34,7 @@ from nmldbmodel import NMLDB_Model
 import dask.bag as dbag # a pip installable module, usually installs without complication
 import dask
 import urllib.request, json
+from nmldbmodel import NMLDB_Model
 def get_all():
     # Obtains the cell threshold, rheobase, resting v, and bias currents for
     with urllib.request.urlopen("https://www.neuroml-db.org/api/models") as url:
@@ -50,6 +51,7 @@ def get_all():
         os.system(str('unzip *')+str(d['Model_ID'])+('*'))
 
     return data
+
 class CellModel(NMLDB_Model):
     def __init__(self, *args, **kwargs):
         super(CellModel, self).__init__(*args, **kwargs)
@@ -97,7 +99,7 @@ class CellModel(NMLDB_Model):
         self.init_cell_record()
 
     def init_cell_record(self):
-        self.server.connect()
+        #self.server.connect()
 
         self.cell_record = Cells.get_or_none(Cells.Model_ID == self.get_model_nml_id())
 
@@ -366,7 +368,7 @@ class CellModel(NMLDB_Model):
 
     def save_LMeasure_metrics(self, swc_file):
 
-        db = self.server.connect()
+        #db = self.server.connect()
         cell_id = self.get_model_nml_id()
 
         # Do all the work within a transaction
