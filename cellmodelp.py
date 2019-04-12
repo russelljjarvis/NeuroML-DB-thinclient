@@ -15,38 +15,23 @@ import string
 import urllib
 from abc import abstractmethod, ABCMeta
 from decimal import Decimal
-#import nmldbutils
 import inspect
 
 import numpy as np
 from matplotlib import pyplot as plt
-#from playhouse.db_url import connect
-#from sshtunnel import SSHTunnelForwarder
 from sklearn.decomposition import PCA
-
-#from collector import Collector
-
 from neuronrunner import NeuronRunner, NumericalInstabilityException
 from runtimer import RunTimer
-#from neuronunit.tables import Cells, Model_Waveforms, Morphometrics, Cell_Morphometrics, db_proxy, Models
-#from neuronunit.nmldbmodel import NMLDB_Model
-#cpus = multiprocessing.cpu_count
+
 import dask.bag as dbag # a pip installable module, usually installs without complication
 import dask
 import urllib.request, json
 import os
 import requests
 def get_wave_forms(cell_id):
-    #try:
     url = str("https://www.neuroml-db.org/api/model?id=")+cell_id
-    #print(url)
     waveids = requests.get(url)
-    #print(waveids.text,type(waveids.text))
     waveids = json.loads(waveids.text)
-    #except:
-    #os.system("wget https://www.neuroml-db.org/api/model?id=NMLCL001129")
-    #with open('model?id=NMLCL001129') as f:
-    #        waveids = json.load(f)
     wlist = waveids['waveform_list']
     waves_to_get = []
     for wl in wlist:
@@ -63,9 +48,8 @@ def get_wave_forms(cell_id):
             waves_to_get.append(waves_to_test['vm'])
     return waves_to_get
 
-# get_wave_forms(str('NMLCL001129'))
+waves = get_wave_forms('NMLCL001129')
 
-        #all_models = json.loads(url.read().decode())
 
 def get_all(Model_ID = str('NMLNT001592')):
     if Model_ID == None:
@@ -81,9 +65,6 @@ def get_all(Model_ID = str('NMLNT001592')):
                 print(d['Model_ID'],d['Directory_Path'])
                 url = str('https://www.neuroml-db.org/GetModelZip?modelID=')+str(d['Model_ID'])+str('&version=NeuroML')
                 urllib.request.urlretrieve(url,Model_ID)
-                #https://www.neuroml-db.org/api/models'
-                #url = str('https://www.neuroml-db.org/GetModelZip?modelID=')+str(d['Model_ID'])+str('&version=NeuroML')
-                #os.system('wget '+str(url))
                 os.system(str('unzip *')+str(d['Model_ID'])+('*'))
                 os.system(str('pynml hhneuron.cell.nml -neuron'))
             return data
@@ -93,10 +74,7 @@ def get_all(Model_ID = str('NMLNT001592')):
     else:
         d = {}
         d['Model_ID'] = Model_ID
-        #print(d['Model_ID'],d['Directory_Path'])
-        #https://www.neuroml-db.org/api/models'
         url = "https://www.neuroml-db.org/GetModelZip?modelID=NMLNT001592&version=NeuroML"
-        #url = str('https://www.neuroml-db.org/GetModelZip?modelID=')+str(d['Model_ID'])+str('&version=NeuroML')
         urllib.request.urlretrieve(url,Model_ID)
         print(url)
         url = "https://www.neuroml-db.org/GetModelZip?modelID=NMLNT001592&version=NeuroML"
