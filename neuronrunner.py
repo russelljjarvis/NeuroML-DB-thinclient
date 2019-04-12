@@ -6,7 +6,7 @@ import sys
 import time
 from multiprocessing import Process, Value
 from threading import Timer
-from config import Config
+#from config import Config
 
 class NumericalInstabilityException(Exception):
     pass

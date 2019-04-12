@@ -28,31 +28,71 @@ from sklearn.decomposition import PCA
 
 from neuronrunner import NeuronRunner, NumericalInstabilityException
 from runtimer import RunTimer
-from tables import Cells, Model_Waveforms, Morphometrics, Cell_Morphometrics, db_proxy, Models
-from nmldbmodel import NMLDB_Model
+#from neuronunit.tables import Cells, Model_Waveforms, Morphometrics, Cell_Morphometrics, db_proxy, Models
+#from neuronunit.nmldbmodel import NMLDB_Model
 #cpus = multiprocessing.cpu_count
 import dask.bag as dbag # a pip installable module, usually installs without complication
 import dask
 import urllib.request, json
-from nmldbmodel import NMLDB_Model
-def get_all():
-    # Obtains the cell threshold, rheobase, resting v, and bias currents for
-    with urllib.request.urlopen("https://www.neuroml-db.org/api/models") as url:
-        data = json.loads(url.read().decode())
+import os
+def get_wave_forms():
+    os.system("wget https://www.neuroml-db.org/api/model?id=NMLCL001129")
+    with open('model?id=NMLCL001129') as f:
+       d = json.load(f)
+       for k,v in d:
 
-    print(data)
-    for d in data:
-        print(d.keys())
-    for d in data:
-        print(d['Model_ID'],d['Directory_Path'])
+
+        #all_models = json.loads(url.read().decode())
+
+def get_all(Model_ID = str('NMLNT001592')):
+    if Model_ID == None:
+        try:
+            # Obtains the cell threshold, rheobase, resting v, and bias currents for
+            with urllib.request.urlopen("https://www.neuroml-db.org/api/models") as url:
+                all_models = json.loads(url.read().decode())
+
+            print(data)
+            for d in data:
+                print(d.keys())
+            for d in data[0]:
+                print(d['Model_ID'],d['Directory_Path'])
+                url = str('https://www.neuroml-db.org/GetModelZip?modelID=')+str(d['Model_ID'])+str('&version=NeuroML')
+                urllib.request.urlretrieve(ur,Model_ID)
+                #https://www.neuroml-db.org/api/models'
+                #url = str('https://www.neuroml-db.org/GetModelZip?modelID=')+str(d['Model_ID'])+str('&version=NeuroML')
+                #os.system('wget '+str(url))
+                os.system(str('unzip *')+str(d['Model_ID'])+('*'))
+                os.system(str('pynml hhneuron.cell.nml -neuron'))
+            return data
+
+        except:
+            pass
+    else:
+        d = {}
+        d['Model_ID'] = Model_ID
+        #print(d['Model_ID'],d['Directory_Path'])
         #https://www.neuroml-db.org/api/models'
-        url = str('https://www.neuroml-db.org/GetModelZip?modelID=')+str(d['Model_ID'])+str('&version=NeuroML')
+        url = "https://www.neuroml-db.org/GetModelZip?modelID=NMLNT001592&version=NeuroML"
+        #url = str('https://www.neuroml-db.org/GetModelZip?modelID=')+str(d['Model_ID'])+str('&version=NeuroML')
+        urllib.request.urlretrieve(url,Model_ID)
+        print(url)
+        url = "https://www.neuroml-db.org/GetModelZip?modelID=NMLNT001592&version=NeuroML"
         os.system('wget '+str(url))
-        os.system(str('unzip *')+str(d['Model_ID'])+('*'))
+        os.system(str('unzip ')+str(d['Model_ID'])+('*'))
+        os.system(str('pynml hhneuron.cell.nml -neuron'))
 
-    return data
 
-class CellModel(NMLDB_Model):
+def run_cell():
+    from neuron import h
+    h.load_file('hhneuron.hoc')
+    cell = h.hhneuron
+    d = {}
+    d['Model_ID'] = str('NT001592')
+    with urllib.request.urlopen(str('https://www.neuroml-db.org/api/model?id=')+str(d['Model_ID'])) as url:
+        data_on_model = json.loads(url.read().decode())
+
+
+class CellModel():
     def __init__(self, *args, **kwargs):
         super(CellModel, self).__init__(*args, **kwargs)
 
