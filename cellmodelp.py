@@ -49,6 +49,9 @@ def get_wave_forms(cell_id):
     return waves_to_get
 
 waves = get_wave_forms('NMLCL001129')
+from neuronunit import models
+for w in waves:
+    sm = models.StaticModel(w)
 
 
 def get_all(Model_ID = str('NMLNT001592')):
