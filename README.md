@@ -1,4 +1,4 @@
-# nml-db_thinclient
+# NeuroML-DB_thinclient
 Client side NeuroML-DB
 https://github.com/scrook/neuroml-db/
 
